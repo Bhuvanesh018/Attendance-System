@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Attendance Records</title>
+    <style>
+      /* Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Heading styles */
+      .heading {
+        width: 100%;
+        background-color: green;
+        font-size: 48px;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        animation: slideIn 1s ease-out;
+      }
+      @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      /* Container for clear button */
+      .container {
+        width: 90%;
+        margin: 20px auto;
+        text-align: center;
+      }
+
+      /* Button styles */
+      .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .btn-danger:hover {
+        background-color: #c82333;
+      }
+
+      /* Table container styling */
+      .table-container {
+        width: 90%;
+        margin: 40px auto;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
+
+      .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .table-container th,
+      .table-container td {
+        padding: 15px;
+        text-align: center;
+      }
+
+      .table-container th {
+        background-color: #007bff;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .table-container tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .table-container tr:hover {
+        background-color: #e9ecef;
+      }
+
+      caption {
+        caption-side: top;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        padding: 10px 0;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="heading">
+      <h1>Attendance Records</h1>
+    </div>
+    
+    <div class="container">
+      <button id="clearHistoryBtn" class="btn-danger">Clear Attendance History</button>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <caption>Attendance Record</caption>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Roll No</th>
+            <th>Status</th>
+            <th>Date & Time</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceBody"></tbody>
+      </table>
+    </div>
+
+    <script>
+      // Function to render attendance history from localStorage
+      function renderAttendanceHistory() {
+        var attendanceHistory = JSON.parse(localStorage.getItem("attendanceHistory")) || [];
+        var attendanceBody = document.getElementById("attendanceBody");
+        attendanceBody.innerHTML = ""; // Clear existing content
+        
+        attendanceHistory.forEach(function(record, index) {
+          var tr = document.createElement("tr");
+
+          var tdIndex = document.createElement("td");
+          tdIndex.textContent = index + 1;
+
+          var tdName = document.createElement("td");
+          tdName.textContent = record.name;
+
+          var tdRollNo = document.createElement("td");
+          tdRollNo.textContent = record.rollNo;
+
+          var tdStatus = document.createElement("td");
+          tdStatus.textContent = record.status;
+
+          var tdDate = document.createElement("td");
+          tdDate.textContent = record.date;
+
+          tr.append(tdIndex, tdName, tdRollNo, tdStatus, tdDate);
+          attendanceBody.appendChild(tr);
+        });
+      }
+
+      // Initial render
+      renderAttendanceHistory();
+
+      // Event for clear attendance history button
+      document.getElementById("clearHistoryBtn").addEventListener("click", function() {
+        if (confirm("Are you sure you want to clear all attendance history?")) {
+          localStorage.removeItem("attendanceHistory");
+          renderAttendanceHistory();
+          alert("Attendance history cleared successfully.");
+        }
+      });
+    </script>
+  </body>
+</html>
